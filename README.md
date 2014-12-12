@@ -1,6 +1,5 @@
-############################################### NOTE ###############################################
-# This is a forked from Target's cassandra cookbook, my changes can be seen from CHANGELOG.md      #
-####################################################################################################
+# NOTE:
+# This is a forked from Target's cassandra cookbook, my changes can be seen from CHANGELOG.md      
 
 # Datastax Enterprise Chef Cookbook (Apache Cassandra)
 This cookbook installs and configures Datastax Enterprise. More info is here ([DataStax Enterprise](http://www.datastax.com/products/)).

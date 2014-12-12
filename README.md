@@ -1,8 +1,8 @@
 # NOTE:
-# This is a forked from Target's cassandra cookbook, my changes can be seen from CHANGELOG.md      
+# This is a forked from Target's cassandra cookbook, see CHANGELOG.md      
 
 Summary of my changes:
-- Setup a cluster and is chef environment aware
+- This cookbook install and configure Datastax Enterprise cluster and is chef environment aware
 - Nodes will be automatically added to the cluster if they belong to the same chef environment
 
 

@@ -1,6 +1,11 @@
 # NOTE:
 # This is a forked from Target's cassandra cookbook, my changes can be seen from CHANGELOG.md      
 
+Summary of my changes:
+- Setup a cluster and is chef environment aware
+- Nodes will be automatically added to the cluster if they belong to the same chef environment
+
+
 # Datastax Enterprise Chef Cookbook (Apache Cassandra)
 This cookbook installs and configures Datastax Enterprise. More info is here ([DataStax Enterprise](http://www.datastax.com/products/)).
 

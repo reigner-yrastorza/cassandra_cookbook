@@ -1,0 +1,58 @@
+# The snitch to be delegated by the DseDelegateSnitch
+# Out of the box, Cassandra provides:
+#  - org.apache.cassandra.locator.SimpleSnitch
+#  - org.apache.cassandra.locator.PropertyFileSnitch
+#  - org.apache.cassandra.locator.GossipingPropertyFileSnitch
+#  - org.apache.cassandra.locator.RackInferringSnitch
+#  - org.apache.cassandra.locator.Ec2Snitch
+#  - org.apache.cassandra.locator.Ec2MultiRegionSnitch
+# Full descriptions found at cassandra.yaml:endpoint_snitch.
+# DataStax Enterprise provides:
+#  - com.datastax.bdp.snitch.DseSimpleSnitch:
+#    Proximity is determined by DSE workload, which places Cassandra,
+#    Analytics, and Solr nodes into their seperate datacenters.
+delegated_snitch: <%= node[:cassandra][:dse][:delegated_snitch] %> 
+
+# Kerberos options
+#
+# The qop is the "Quality of Protection" for each connection.  Used by clients
+# and servers.  Below is a list of valid values and their meanings.
+#   auth - (default) authentication only
+#   auth-int - authentication plus integity protection of all transmitted data
+#   auth-conf - authetication plus integrity protection and encryption of all
+#              transmitted data
+# Warning: Encryption using auth-conf is separate and completely independent
+# of whether encryption is done using SSL.  So that if auth-conf is selected
+# here and SSL is enabled, then the transmitted data will be encrypted twice.
+kerberos_options:
+    keytab: resources/dse/conf/dse.keytab
+    service_principal: dse/_HOST@REALM
+    http_principal: HTTP/_HOST@REALM
+    qop: auth
+
+# Client/Server encryption options
+client_encryption_options:
+    enabled: false
+    keystore: resources/dse/conf/.keystore
+    keystore_password: cassandra
+    keystore_type: JKS
+    truststore: resources/dse/conf/.truststore
+    truststore_password: cassandra
+    truststore_type: JKS
+    protocol: ssl
+    cipher_suites: [TLS_RSA_WITH_AES_128_CBC_SHA, TLS_RSA_WITH_AES_256_CBC_SHA]
+
+# To ensure that data with a TTL is purged from Solr indexes when it expires, 
+# DSE periodically checks indexes for data that has exceeded its TTL. These settings 
+# control the scheduling & execution of those checks.
+ttl_index_rebuild_options:
+    # by default, schedule a check every 300 seconds
+    fixed_rate_period: 300
+    # the first check is delayed to speed up startup time
+    initial_delay: 20
+    # documents subject to TTL are checked in batches: this configures the max number of docs
+    # checked per batch 
+    max_docs_per_batch: 200
+
+# Uncomment to configure max number of indexing threads per solr core:
+# max_solr_concurrency_per_core: 1

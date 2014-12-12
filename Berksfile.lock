@@ -1,0 +1,13 @@
+DEPENDENCIES
+  dse
+    path: .
+    metadata: true
+
+GRAPH
+  apt (2.6.0)
+  dse (3.0.12)
+    apt (~> 2.0)
+    java (~> 1.14)
+    yum (~> 2.3)
+  java (1.28.0)
+  yum (2.4.4)

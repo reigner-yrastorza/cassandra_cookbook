@@ -1,0 +1,106 @@
+# The snitch to be delegated by the DseDelegateSnitch
+# Out of the box, Cassandra provides:
+#  - org.apache.cassandra.locator.SimpleSnitch
+#  - org.apache.cassandra.locator.PropertyFileSnitch
+#  - org.apache.cassandra.locator.GossipingPropertyFileSnitch
+#  - org.apache.cassandra.locator.RackInferringSnitch
+#  - org.apache.cassandra.locator.Ec2Snitch
+#  - org.apache.cassandra.locator.Ec2MultiRegionSnitch
+# Full descriptions found at cassandra.yaml:endpoint_snitch.
+# DataStax Enterprise provides:
+#  - com.datastax.bdp.snitch.DseSimpleSnitch:
+#    Proximity is determined by DSE workload, which places Cassandra,
+#    Analytics, and Solr nodes into their seperate datacenters.
+delegated_snitch: <%= node[:cassandra][:dse][:delegated_snitch] %>
+
+# Kerberos options
+#
+# The qop is the "Quality of Protection" for each connection.  Used by clients
+# and servers.  Below is a list of valid values and their meanings.
+#   auth - (default) authentication only
+#   auth-int - authentication plus integity protection of all transmitted data
+#   auth-conf - authetication plus integrity protection and encryption of all
+#              transmitted data
+# Warning: Encryption using auth-conf is separate and completely independent
+# of whether encryption is done using SSL.  So that if auth-conf is selected
+# here and SSL is enabled, then the transmitted data will be encrypted twice.
+kerberos_options:
+    keytab: resources/dse/conf/dse.keytab
+    service_principal: dse/_HOST@REALM
+    http_principal: HTTP/_HOST@REALM
+    qop: auth
+
+# To ensure that data with a TTL is purged from Solr indexes when it expires,
+# DSE periodically checks indexes for data that has exceeded its TTL. These settings
+# control the scheduling & execution of those checks.
+ttl_index_rebuild_options:
+    # by default, schedule a check every 300 seconds
+    fixed_rate_period: 300
+    # the first check is delayed to speed up startup time
+    initial_delay: 20
+    # documents subject to TTL are checked in batches: this configures the max number of docs
+    # checked per batch
+    max_docs_per_batch: 200
+
+# Solr shard transport options, for inter-node communication between Solr nodes.
+shard_transport_options:
+#
+# Default type is "http" for plain old Solr communication via the standard
+# HTTP-based interface.
+# The other type is "netty" for TCP-based communication, providing lower latency,
+# improved throughput and reduced resource consumption.
+    type: http
+# Options specific to the "netty" transport type.
+# The TCP listen port, mandatory if you either want to use the "netty" transport
+# type, or want to later migrate to it from the "http" one. If you plan to use
+# and stay with the "http" one, either comment it out or set it to -1.
+    netty_server_port: 8984
+# The number of server acceptor threads (default is number of available processors).
+#   netty_server_acceptor_threads:
+# The number of server worker threads (default is number of available processors * 8).
+#   netty_server_worker_threads:
+# The number of client worker threads (default is number of available processors * 8).
+#   netty_client_worker_threads:
+# The max number of client connections (default is 100).
+#   netty_client_max_connections:
+# The client request timeout, in milliseconds (default is 60000).
+#   netty_client_request_timeout:
+
+# Solr indexing settings
+#
+# Max number of concurrent asynchronous indexing threads per Solr core.
+# Default is "number of available processors" * 2; if set at 1,
+# the system reverts to the synchronous behavior, where data is
+# synchronously written into Cassandra and indexed by Solr.
+#
+# max_solr_concurrency_per_core: 2
+#
+# The back pressure threshold is the total number of queued asynchronous
+# indexing requests per core, computed at Solr commit time;
+# when exceeded, back pressure kicks in to avoid excessive
+# resources consumption, causing throttling of new incoming requests.
+# Default is 500.
+#
+# back_pressure_threshold_per_core: 500
+#
+# The max time to wait for flushing of async index updates, happening either
+# at Solr commit time or Cassandra flush time.
+# Flushing should always complete successfully, in order to fully sync Solr indexes
+# with Cassandra data, so should always be set at a reasonable high value,
+# expressed in minutes.
+# Default is 5.
+#
+# flush_max_time_per_core: 5
+
+# Disk health check settings
+#
+# Minimum disk space in MB allowed on a partition holding a data directory
+# before a node is shut down.
+#
+# min_disk_space_before_failure: 10
+#
+# Time interval in minutes that the disk health checker will leave between
+# each check. If this setting is set to 0 the disk health checker will be
+# disabled.
+#
+# health_check_interval: 5

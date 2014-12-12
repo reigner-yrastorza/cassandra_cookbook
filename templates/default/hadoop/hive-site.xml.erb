@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<configuration>
+
+<!-- Hive Configuration can either be stored in this file or in the hadoop configuration files  -->
+<!-- that are implied by Hadoop setup variables.                                                -->
+<!-- Aside from Hadoop setup variables - this file is provided as a convenience so that Hive    -->
+<!-- users do not have to edit hadoop configuration files (that may be managed as a centralized -->
+<!-- resource).                                                                                 -->
+
+<!-- Hive Execution Parameters -->
+
+  <property>
+    <name>hive.exec.mode.local.auto</name>
+    <value>false</value>
+    <description>Let hive determine whether to run in local mode automatically</description>
+  </property>
+
+  <property>
+    <name>hive.metastore.warehouse.dir</name>
+    <value>cfs:///user/hive/warehouse</value>
+    <description>location of default database for the warehouse</description>
+  </property>
+
+  <property>
+    <name>hive.hwi.war.file</name>
+    <value>lib/hive-hwi.war</value>
+    <description>This sets the path to the HWI war file, relative to ${HIVE_HOME}</description>
+  </property>
+
+  <property>
+    <name>hive.metastore.rawstore.impl</name>
+    <value>com.datastax.bdp.hadoop.hive.metastore.CassandraHiveMetaStore</value>
+    <description>Use the Apache Cassandra Hive RawStore implementation</description>
+</property>
+
+  <property>
+    <name>hadoop.bin.path</name>
+    <value>${dse.bin}/dse hadoop</value>
+  </property>
+
+<property>
+  <name>hive.exec.scratchdir</name>
+  <value><%= node["hive"]["scratch_dir"] %></value>
+  <description>Scratch space for Hive jobs</description>
+</property>
+
+  <!-- Set this to true to enable auto-creation of Cassandra keyspaces as Hive Databases -->
+  <property>
+    <name>cassandra.autoCreateHiveSchema</name>
+    <value>true</value>
+  </property>
+
+  <!-- Uncomment & customise this section to enable Kerberos security -->
+  <!--
+  <property>
+    <name>hive.metastore.sasl.enabled</name>
+    <value>true</value>
+    <description>
+      If true, the metastore thrift interface will be secured with SASL.
+      Clients must then authenticate with Kerberos.
+    </description>
+  </property>
+
+  <property>
+    <name>hive.metastore.kerberos.keytab.file</name>
+    <value>/path/to/dse.keytab</value>
+    <description>
+      The path to the Kerberos Keytab file containing the
+      metastore thrift server's service principal.
+    </description>
+  </property>
+
+  <property>
+    <name>hive.metastore.kerberos.principal</name>
+    <value>hive/_HOST@EXAMPLE.COM</value>
+  </property>
+  -->
+</configuration>

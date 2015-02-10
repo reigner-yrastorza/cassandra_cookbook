@@ -2,7 +2,7 @@
 
 This file is used to list changes made in each version of the dse cookbook.
 ## 3.1.0
-* Updated to be environment aware, automatically add nodes that belong to the same environment
+* Updated to be environment aware, automatically add nodes to the cluster that exists on the same chef environment
 
 ## 3.0.12
 * refactored some version checks

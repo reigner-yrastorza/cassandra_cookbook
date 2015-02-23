@@ -33,7 +33,7 @@ end
 if node['cassandra']['role_based_seeds']
   list = []
     list = search(:node, "role:cassandra AND chef_environment:#{node.chef_environment}")
-    list.sort!{|x, y| x[:ipaddress] <=> y[:ipaddress]}
+    list.sort! { |x, y| x[:name] <=> y[:name] }
     list.map!{|n| n[:ipaddress]}
   node.default['cassandra']['seeds'] = list.join(",")
   puts "DEBUG: #{node['cassandra']['seeds']}"
